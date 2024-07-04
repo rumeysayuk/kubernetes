@@ -4,6 +4,7 @@ metadata:
   name: firstpod
   labels:
     app: frontend  
+    team: developer
 spec:
   containers:
     - name: nginx
@@ -17,6 +18,7 @@ spec:
         requests:
           memory: "64Mi"
           cpu: "250m"
+          
 
 
 

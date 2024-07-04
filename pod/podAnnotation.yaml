@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotationpod
+  annotations:
+    owner: "Rumeysa yuk"
+    notification-email: "rumeysayuk1@gmail.com"
+    releasedate: "04.07.2024"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  containers:
+  - name: annotationcontainer
+    image: nginx
+    ports:
+    - containerPort: 80
+
+
+
+#kubectl annotate pods annotationpod rum=yuk => CREATE
+# kubectl annotate pods annotationpod rum-   => DELETE
+# kubectl annotate --overwrite pods annotationpod rumeysA=yuk => EDIT
+

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespacepod
+  namespace: development
+spec:
+  containers:
+    - name: namespacecontainer
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+
+#kubectl get pods -n development -n ile istediğim namespace adına ait namespaceler varsa getirir        
+# kubectl config set-context --current --namespace=development varsayınlan napmespaceyi editlemek için
+# kubectl delete namespaces development
