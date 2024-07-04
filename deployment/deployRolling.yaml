@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolldeploy
+  labels:
+    team: development
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: rolling
+  strategy: # bu depoloyment üzerinde yapılacak rollout stratejisi
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2 # sistemde en falza kaç pod olabilir
+      maxUnavailable: 2 # en fazla 2 container sil. yüzde de verilebilir
+  template: # podun özellikleri
+    metadata:
+      labels: 
+        app: rolling
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            limits:
+              cpu: "256m"
+              memory: "128Mi"
+
+# rollout stratejisi = recreate mevcut podları sil ve yeni pod oluştur.        
+# rolling default seçili 
+
+# kubectl set image deployment rolldeploy nginx=httpd:alpine --record=true
+# Depoloyment objesinin imagesini güncellemek için kullanılır.   
+
+# kubectl rollout history deployment rolldeploy
+# rollout historysini görmek için kullanılır.
+# Bunu  görebilmek için deployment objesini oluştururken 
+#kubectl apply -f deployRolling.yaml --record
+# ile oluşturuluması gerekmekte.
+# kubectl rollout undo deployment rolldeploy --to-revision=1
+#bu komut ile herhangi bir eski deploy haline geri dönülebilir.
+
+#kubectl rollout status deployment rolldep -w 
+# £deploymen t üzerindeki değişiklikleri izlemek için
+
+#kubectl rollout pause deployment rolldep
+# bir deployment editi yaparken örn image güncellerken, bir sorun çıkarsa güncellemeyi durdurmak için
+#aslında burda  güncellenen pod olmuş oluyor
+#kubectl rollout resume deployment rolldep 
+#durdurulan deploymenti yeniden başlatmak için 
+

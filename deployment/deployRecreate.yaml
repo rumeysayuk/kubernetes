@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rcdeployment
+  labels:
+    team: development
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: recreate
+  strategy: # bu depoloyment üzerinde yapılacak rollout stratejisi
+    type: Recreate
+  template: # podun özellikleri
+    metadata:
+      labels: 
+        app: recreate
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            limits:
+              cpu: "256m"
+              memory: "128Mi"
+
+# rollout stratejisi = recreate mevcut podları sil ve yeni pod oluştur.             

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firstdeployment
+  labels:
+    team: rumeysa
+spec:
+  selector: 
+    matchLabels:
+      app: frontend
+  template: #oluşturulacak podun özellikleri
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m"  
+            requests:
+              memory: "64Mi"
+              cpu: "250m"  
+  replicas: 3
+    
+
+
+#yöneteceği podların labeli veriliyor. ve her poda bu label eklenmeli    
