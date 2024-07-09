@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: emptydir
+spec:
+  containers:
+  - name: frontend
+    image: rumeysayuk/k8s:blue
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    livenessProbe:
+      httpGet:
+        path: /healthcheck
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    volumeMounts:
+      - mountPath: /cache
+        name: cache-vol
+    ports:
+      - containerPort: 80
+  - name: sidecar
+    image: busybox
+    command: ["/bin/sh"]
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    args: ["-c", "sleep 3600"]
+    volumeMounts:
+      - mountPath: /tmp/log
+        name: cache-vol
+  volumes:
+    - name: cache-vol
+      emptyDir: {}
+
+# bu pod içindde 2 container oluşturuyor. ve bu 2 sine de aynı anda bağlanabilir
+# volume oluşturmak için 
+# volumeMounts ile tanımlanır ve pathe mount eder.
+# böylelikle aynı pod içindeki 2 container haberleişpp dosya okuyabilecek

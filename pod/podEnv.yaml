@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envpod
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: envpod
+    image: rumeysayuk/env:latest
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+    env:
+      - name: User
+        value: "Rumeysa"
+      - name: database
+        value: "testdb.example.com"
+
+# kubectl exec -it envpod  -- printenv
+#komutu ile ilgili podun envleri görüntülenir
+
+# kubectl port-forward pod/envpod  8080:80
+# yukarıdaki komut ile  port yönlendirmesi yapılabilir
+#başka bir terminalden curl 127.0.0.1:8080 adresine ister atarsam belirlediğim pod objesi alır isteği.
