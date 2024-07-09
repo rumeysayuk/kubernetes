@@ -1,0 +1,21 @@
+
+# tek seferde çalışsın bitsin istenilen uygulamalrda kullanılabilir. örneğin db oluşturmak
+# pi sayısının ilk 2000 karakterini yazdıran bir app yapılmıştır
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  parallelism: 2  # 10 podu aynı anda kaçar kaçar yapacağı
+  completions: 10 # job altında kaç tane başarılı pod olacağını belirtmek için 
+  activeDeadlineSeconds: 100
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4
+
