@@ -56,3 +56,4 @@ $ kubectl config use-context rumeysayuk-context
 ## authentication ve authorization aynı şey değil k8s için.
 
 
+##
