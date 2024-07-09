@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    team: development
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ozgurozturknet/k8s:blue
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 3
+        resources:
+          limits: 
+            memory: "128Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+# bu sayfada 3 podlu bir deployment ve onları arkasına alacak bir servis oluşturulmuştur.
+# bu endpointlere istek atıyor ve olumlu cevap alınca servisin istek almaua uygun olduğuna karar veriyor.
+#kubectl exec -it frontend-8c8bb59d9-zst74 -- rm -rf ready
+# dersem ilgili pod 
+# Subsets:
+  # Addresses:          10.244.0.38,10.244.0.39
+  # NotReadyAddresses:  10.244.0.40
+
+# podu not ready e alır ve trafik akmaz o poda 
