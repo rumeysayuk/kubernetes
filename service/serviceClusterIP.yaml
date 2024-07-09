@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: backend # bu porta sahip portları seçiyor
+  ports:
+    - port: 5000 #dinleyeceği port
+      targetPort: 5000 #expose edilen port
+
+
+ # labeller objeler araısnda bağlantı kurmak için kullanılır. 
+#bu servis dosyasını kaldırdığımda deployAPp te tanımlanan podları arkasına alıp onlara servis olarak hizmet eder.
+
+# rumeysa@rumeysa-PC:~$ kubectl get service
+# NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+# backend      ClusterIP   10.97.20.194   <none>        5000/TCP   15h
+# kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP    15h
+ # bu sekilde bir çıktı bu portlar sanal
+
+ # containerde nslookup kullanabilmek için 
+# apt-get update
+# apt-get install -y dnsutils
+# sonrasında nslookup backend
+
+
+#curl backend diyince ona gider ve istek atar. ileytişim kurmuş olur
