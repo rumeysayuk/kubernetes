@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: toleratedpod1
+  labels:
+    env: test
+spec:
+  containers:
+  - name: toleratedcontainer1
+    image: nginx:latest
+    resources:
+      limits:
+        cpu: "0.5"
+        memory: "128Mi"
+  tolerations: # bu kısımda ilgili podu taint etmek için gerekli değerler veriliyor.
+  - key: "platform"
+    operator: "Equal"
+    value: "production"
+    effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: toleratedpod2
+  labels:
+    env: test
+spec:
+  containers:
+  - name: toleratedcontainer2
+    image: nginx:latest
+    resources:
+      limits:
+        cpu: "0.5"
+        memory: "128Mi"
+  tolerations:
+  - key: "platform"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+# kubectl describe nodes minikube  komutu çalıştılıp tains kısmına bakılırsa none olduğu görülür çünkü defaultta oluşturulmamıştır. doalyısıyla her nodu kabuş edecek durumda    
+# kubectl taint node minikube platfrom=production:NoSchedule komutu ile oluşturulur
+# kubectl taint node minikube platfrom- komutu ile silinirü
+
+# kubectl run test --image=nginx:latest --restart=Never komutu ile terminalle oluşturulur pod
+# kubectl describe pod test komutu ile ilgili pod ile alakalı daha fazla bilgi alınabilir
+
+# NoSchedule, NoExecute 
