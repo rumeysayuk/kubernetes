@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: requestlimit
+  labels:
+    test: requestlimit
+spec:
+  containers:
+  - name: requestlimit
+    image: nginx:latest
+    resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m"  
+            requests:
+              memory: "64Mi"
+              cpu: "250m"  
+    ports:
+      - containerPort: 8080
+
+#verilen alanlar bulunamazsa bu pod oluşturulamaz. Çünkü burada verilen ayarlar bu pod objesinin min ihtiyacına göre yapılandırılmıuştır.
+#
