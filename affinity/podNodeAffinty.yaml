@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeaffinitypod1
+spec:
+  containers:
+  - name: nodeaffinity1
+    image: ozgurozturknet/k8s
+    resources:
+      limits:
+        cpu: "0.1m"
+        memory: "128Mi"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: app
+            operator: In #In, NotIn, Exists, DoesNotExist
+            values:
+            - blue
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeaffinitypod2
+spec:
+  containers:
+  - name: nodeaffinity2
+    image: ozgurozturknet/k8s
+    resources:
+      limits:
+        cpu: "0.1m"
+        memory: "128Mi"
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1 # birden fazla tanım varsa onceliklere göre bakıyor 1 , 2 den daha öncelikli
+        preference:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - blue
+      - weight: 2
+        preference:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - red
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeaffinitypod3
+spec:
+  containers:
+  - name: nodeaffinity3
+    image: ozgurozturknet/k8s
+    resources:
+      limits:
+        cpu: "0.1m"
+        memory: "128Mi"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: app # bu tanımlananı arıyor
+            operator: Exists #In, NotIn, Exists, DoesNotExist
+
+# node selector ile bir podu isteğimiz nod üzerinde çalıştırabiliyoruz ama bu yetersiz. Node affinity daha çok imkan sağluor.
+# 2 tür yapılşıyor . 1. si requiredDuringSchedulingIgnoredDuringExecution
+# uygun worker node bul oluştur bulamazsan oluşturma. Bu durumda node pendingte kalıyor 
+# preferredDuringSchedulingIgnoredDuringExecution bu varsa oluşturur yoksa gidip bulduğu bir noda da oluşrurabilir
+# bunda wieght var 1 2 den daha öncelikli ***
+
+# 1 ve 3. podun istediği labeli verecek şekilde label eklenirse podlar oluşturulur.
+# komut => kubectl label node minikube app=blue
